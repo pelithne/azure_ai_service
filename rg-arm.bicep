@@ -13,23 +13,27 @@ param location string = 'swedencentral'
 
 var discoveryURL = 'https://${location}.api.azureml.ms/discovery'
 var hubresourceName = '${baseName}workspaces_hub'
+var aiServiceResourceName = '${baseName}accounts_aoai'
+var searchServiceResourceName = '${baseName}searchServices'
+
+
 var defaultWorkspaceResourceGroup = '/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}'
 
 
-resource accounts_abpl_aoai_name_resource 'Microsoft.CognitiveServices/accounts@2024-06-01-preview' = {
-  name: accounts_abpl_aoai_name
+resource accounts_resource 'Microsoft.CognitiveServices/accounts@2024-06-01-preview' = {
+  name: aiServiceResourceName
   location: location
   sku: {
     name: ai_service_sku
   }
   kind: 'AIServices'
   properties: {
-    customSubDomainName: accounts_abpl_aoai_name
+    customSubDomainName: aiServiceResourceName
     publicNetworkAccess: 'Enabled'
   }
 }
 
-resource vaults_kv_name_resource 'Microsoft.KeyVault/vaults@2024-04-01-preview' = {
+resource vaults_kv_resource 'Microsoft.KeyVault/vaults@2024-04-01-preview' = {
   name: vaults_kv_name
   location: location
   properties: {
@@ -63,8 +67,8 @@ resource vaults_kv_name_resource 'Microsoft.KeyVault/vaults@2024-04-01-preview' 
   }
 }
 
-resource searchServices_abpl_name_resource 'Microsoft.Search/searchServices@2024-06-01-preview' = {
-  name: searchServices_abpl_name
+resource searchServices_resource 'Microsoft.Search/searchServices@2024-06-01-preview' = {
+  name: searchServiceResourceName
   location: location
   sku: {
     name: search_service_sku
@@ -127,7 +131,7 @@ resource searchServices_abpl_search_name_resource 'Microsoft.Storage/storageAcco
 }
 
 resource accounts_abpl_aoai_name_Default 'Microsoft.CognitiveServices/accounts/defenderForAISettings@2024-06-01-preview' = {
-  parent: accounts_abpl_aoai_name_resource
+  parent: accounts_resource
   name: 'Default'
   properties: {
     state: 'Disabled'
@@ -260,7 +264,7 @@ resource workspaces_abpl_hub_name_resource 'Microsoft.MachineLearningServices/wo
   properties: {
     friendlyName: workspaces_abpl_hub_name
     storageAccount: searchServices_abpl_search_name_resource.id
-    keyVault: vaults_kv_name_resource.id
+    keyVault: vaults_kv_resource.id
     hbiWorkspace: false
     managedNetwork: {
       isolationMode: 'Disabled'
@@ -294,7 +298,7 @@ resource workspaces_abpl_hub_name_abpl_aoai191036897597 'Microsoft.MachineLearni
     peStatus: 'NotApplicable'
     metadata: {
       ApiType: 'Azure'
-      ResourceId: accounts_abpl_aoai_name_resource.id
+      ResourceId: accounts_resource.id
       location: location
       ApiVersion: '2023-07-01-preview'
       DeploymentApiVersion: '2023-10-01-preview'
@@ -316,7 +320,7 @@ resource workspaces_abpl_hub_name_abpl_aoai191036897597_aoai 'Microsoft.MachineL
     peStatus: 'NotApplicable'
     metadata: {
       ApiType: 'Azure'
-      ResourceId: accounts_abpl_aoai_name_resource.id
+      ResourceId: accounts_resource.id
       location: location
       ApiVersion: '2023-07-01-preview'
       DeploymentApiVersion: '2023-10-01-preview'
@@ -338,7 +342,7 @@ resource workspaces_abpl_hub_name_AzureAISearch 'Microsoft.MachineLearningServic
     peStatus: 'NotApplicable'
     metadata: {
       ApiType: 'Azure'
-      ResourceId: searchServices_abpl_name_resource.id
+      ResourceId: searchServices_resource.id
       location: location
       ApiVersion: '2024-05-01-preview'
       DeploymentApiVersion: '2023-11-01'
