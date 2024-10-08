@@ -1,8 +1,9 @@
-param vaults_kv_name string = 'kvabplhubpelithne14'
-param workspaces_abpl_hub_name string = 'abplhubpelithne14'
-param searchServices_abpl_name string = 'abplsearchpelithne14'
-param searchServices_abpl_search_name string = 'stabplhubpelithne14'
-param accounts_abpl_aoai_name string = 'abplaoaipelithne14'
+param iteration string = '15'
+param vaults_kv_name string = 'kvabplhubpelithne${iteration}'
+param workspaces_abpl_hub_name string = 'abplhubpelithne${iteration}'
+param searchServices_abpl_name string = 'abplsearchpelithne${iteration}'
+param searchServices_abpl_search_name string = 'stabplhubpelithne${iteration}'
+param accounts_abpl_aoai_name string = 'abplaoaipelithne${iteration}'
 param storage_account_sku string = 'Standard_GRS'
 param ai_service_sku string = 'S0'
 param search_service_sku string = 'standard'
@@ -61,7 +62,7 @@ resource searchServices_abpl_name_resource 'Microsoft.Search/searchServices@2024
   name: searchServices_abpl_name
   location: location
   sku: {
-    name: 'standard'
+    name: search_service_sku
   }
   properties: {
     replicaCount: 1
@@ -252,9 +253,9 @@ resource workspaces_abpl_hub_name_resource 'Microsoft.MachineLearningServices/wo
     type: 'SystemAssigned'
   }
   properties: {
-    keyVault: vaults_kv_name_resource.id
     friendlyName: workspaces_abpl_hub_name
     storageAccount: searchServices_abpl_search_name_resource.id
+    keyVault: vaults_kv_name_resource.id
     hbiWorkspace: false
     managedNetwork: {
       isolationMode: 'Disabled'
@@ -266,7 +267,7 @@ resource workspaces_abpl_hub_name_resource 'Microsoft.MachineLearningServices/wo
     discoveryUrl: 'https://swedencentral.api.azureml.ms/discovery'
     enableSoftwareBillOfMaterials: false
     workspaceHubConfig: {
-      defaultWorkspaceResourceGroup: 
+      defaultWorkspaceResourceGroup: '/subscriptions/4ce7ad8d-95ed-4652-bd4a-5f2af19d29cb/resourceGroups/rg-ericsson-ai-studio'
     }
     enableDataIsolation: true
     systemDatastoresAuthMode: 'accesskey'
@@ -280,7 +281,7 @@ resource workspaces_abpl_hub_name_abpl_aoai191036897597 'Microsoft.MachineLearni
   properties: {
     authType: 'AAD'
     category: 'AIServices'
-    target: 'https://abplaoaipelithne14.cognitiveservices.azure.com/'
+    target: 'https://${accounts_abpl_aoai_name}.cognitiveservices.azure.com/'
     useWorkspaceManagedIdentity: true
     isSharedToAll: true
     sharedUserList: []
@@ -302,7 +303,7 @@ resource workspaces_abpl_hub_name_abpl_aoai191036897597_aoai 'Microsoft.MachineL
   properties: {
     authType: 'AAD'
     category: 'AzureOpenAI'
-    target: 'https://abpl-aoai191036897597.openai.azure.com/'
+    target: 'https://${accounts_abpl_aoai_name}.openai.azure.com/'
     useWorkspaceManagedIdentity: true
     isSharedToAll: true
     sharedUserList: []
@@ -324,7 +325,7 @@ resource workspaces_abpl_hub_name_AzureAISearch 'Microsoft.MachineLearningServic
   properties: {
     authType: 'AAD'
     category: 'CognitiveSearch'
-    target: 'https://abpl-search191036897597.search.windows.net'
+    target: 'https://${accounts_abpl_aoai_name}.search.windows.net'
     useWorkspaceManagedIdentity: false
     isSharedToAll: true
     sharedUserList: []
