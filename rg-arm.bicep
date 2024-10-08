@@ -1,4 +1,5 @@
-param iteration string = '15'
+param iteration string = '16'
+param baseName string = 'abpl${iteration}'
 param vaults_kv_name string = 'kvabplhubpelithne${iteration}'
 param workspaces_abpl_hub_name string = 'abplhubpelithne${iteration}'
 param searchServices_abpl_name string = 'abplsearchpelithne${iteration}'
@@ -7,8 +8,12 @@ param accounts_abpl_aoai_name string = 'abplaoaipelithne${iteration}'
 param storage_account_sku string = 'Standard_GRS'
 param ai_service_sku string = 'S0'
 param search_service_sku string = 'standard'
-
+param hub_sku string = 'Basic'
 param location string = 'swedencentral'
+
+var discoveryURL = 'https://${location}.api.azureml.ms/discovery'
+var hubresourceName = '${baseName}workspaces_hub'
+var defaultWorkspaceResourceGroup = '/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}'
 
 
 resource accounts_abpl_aoai_name_resource 'Microsoft.CognitiveServices/accounts@2024-06-01-preview' = {
@@ -241,12 +246,12 @@ resource Microsoft_Storage_storageAccounts_tableServices_searchServices_abpl_sea
 }
 
 resource workspaces_abpl_hub_name_resource 'Microsoft.MachineLearningServices/workspaces@2024-07-01-preview' = {
-  name: workspaces_abpl_hub_name
+  name: hubresourceName
   location: location
   tags: { }
   sku: {
-    name: 'Basic'
-    tier: 'Basic'
+    name: hub_sku
+    tier: hub_sku
   }
   kind: 'Hub'
   identity: {
@@ -264,10 +269,10 @@ resource workspaces_abpl_hub_name_resource 'Microsoft.MachineLearningServices/wo
     v1LegacyMode: false
     publicNetworkAccess: 'Enabled'
     ipAllowlist: []
-    discoveryUrl: 'https://swedencentral.api.azureml.ms/discovery'
+    discoveryUrl: discoveryURL
     enableSoftwareBillOfMaterials: false
     workspaceHubConfig: {
-      defaultWorkspaceResourceGroup: '/subscriptions/4ce7ad8d-95ed-4652-bd4a-5f2af19d29cb/resourceGroups/rg-ericsson-ai-studio'
+      defaultWorkspaceResourceGroup: defaultWorkspaceResourceGroup
     }
     enableDataIsolation: true
     systemDatastoresAuthMode: 'accesskey'
