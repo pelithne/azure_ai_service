@@ -1,10 +1,9 @@
-param iteration string = '16'
+param iteration string = '17'
 param baseName string = 'abpl${iteration}'
 param vaults_kv_name string = 'kvabplhubpelithne${iteration}'
 param workspaces_abpl_hub_name string = 'abplhubpelithne${iteration}'
-param searchServices_abpl_name string = 'abplsearchpelithne${iteration}'
-param searchServices_abpl_search_name string = 'stabplhubpelithne${iteration}'
-param accounts_abpl_aoai_name string = 'abplaoaipelithne${iteration}'
+param searchServices_storage_name string = 'stabplhubpelithne${iteration}'
+param accounts_name string = 'abplaoaipelithne${iteration}'
 param storage_account_sku string = 'Standard_GRS'
 param ai_service_sku string = 'S0'
 param search_service_sku string = 'standard'
@@ -13,8 +12,8 @@ param location string = 'swedencentral'
 
 var discoveryURL = 'https://${location}.api.azureml.ms/discovery'
 var hubresourceName = '${baseName}workspaces_hub'
-var aiServiceResourceName = '${baseName}accounts_aoai'
-var searchServiceResourceName = '${baseName}searchServices'
+var aiServiceResourceName = '${baseName}accountsaoai'
+var searchServiceResourceName = '${baseName}searchservices'
 
 
 var defaultWorkspaceResourceGroup = '/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}'
@@ -94,8 +93,8 @@ resource searchServices_resource 'Microsoft.Search/searchServices@2024-06-01-pre
   }
 }
 
-resource searchServices_abpl_search_name_resource 'Microsoft.Storage/storageAccounts@2023-05-01' = {
-  name: searchServices_abpl_search_name
+resource searchServices_storage_resource 'Microsoft.Storage/storageAccounts@2023-05-01' = {
+  name: searchServices_storage_name
   location: location
   sku: {
     name: storage_account_sku
@@ -130,7 +129,7 @@ resource searchServices_abpl_search_name_resource 'Microsoft.Storage/storageAcco
   }
 }
 
-resource accounts_abpl_aoai_name_Default 'Microsoft.CognitiveServices/accounts/defenderForAISettings@2024-06-01-preview' = {
+resource accounts_name_Default 'Microsoft.CognitiveServices/accounts/defenderForAISettings@2024-06-01-preview' = {
   parent: accounts_resource
   name: 'Default'
   properties: {
@@ -138,118 +137,7 @@ resource accounts_abpl_aoai_name_Default 'Microsoft.CognitiveServices/accounts/d
   }
 }
 
-
-resource searchServices_abpl_search_name_default 'Microsoft.Storage/storageAccounts/blobServices@2023-05-01' = {
-  parent: searchServices_abpl_search_name_resource
-  name: 'default'
-  sku: {
-    name: storage_account_sku
-    tier: 'Standard'
-  }
-  properties: {
-    cors: {
-      corsRules: [
-        {
-          allowedOrigins: [
-            'https://mlworkspace.azure.ai'
-            'https://ml.azure.com'
-            'https://*.ml.azure.com'
-            'https://ai.azure.com'
-            'https://*.ai.azure.com'
-          ]
-          allowedMethods: [
-            'GET'
-            'HEAD'
-            'PUT'
-            'DELETE'
-            'OPTIONS'
-            'POST'
-            'PATCH'
-          ]
-          maxAgeInSeconds: 1800
-          exposedHeaders: [
-            '*'
-          ]
-          allowedHeaders: [
-            '*'
-          ]
-        }
-      ]
-    }
-    deleteRetentionPolicy: {
-      allowPermanentDelete: false
-      enabled: false
-    }
-  }
-}
-
-resource Microsoft_Storage_storageAccounts_fileServices_searchServices_abpl_search_name_default 'Microsoft.Storage/storageAccounts/fileServices@2023-05-01' = {
-  parent: searchServices_abpl_search_name_resource
-  name: 'default'
-  sku: {
-    name: storage_account_sku
-    tier: 'Standard'
-  }
-  properties: {
-    protocolSettings: {
-      smb: {}
-    }
-    cors: {
-      corsRules: [
-        {
-          allowedOrigins: [
-            'https://mlworkspace.azure.ai'
-            'https://ml.azure.com'
-            'https://*.ml.azure.com'
-            'https://ai.azure.com'
-            'https://*.ai.azure.com'
-          ]
-          allowedMethods: [
-            'GET'
-            'HEAD'
-            'PUT'
-            'DELETE'
-            'OPTIONS'
-            'POST'
-          ]
-          maxAgeInSeconds: 1800
-          exposedHeaders: [
-            '*'
-          ]
-          allowedHeaders: [
-            '*'
-          ]
-        }
-      ]
-    }
-    shareDeleteRetentionPolicy: {
-      enabled: true
-      days: 7
-    }
-  }
-}
-
-resource Microsoft_Storage_storageAccounts_queueServices_searchServices_abpl_search_name_default 'Microsoft.Storage/storageAccounts/queueServices@2023-05-01' = {
-  parent: searchServices_abpl_search_name_resource
-  name: 'default'
-  properties: {
-    cors: {
-      corsRules: []
-    }
-  }
-}
-
-resource Microsoft_Storage_storageAccounts_tableServices_searchServices_abpl_search_name_default 'Microsoft.Storage/storageAccounts/tableServices@2023-05-01' = {
-  parent: searchServices_abpl_search_name_resource
-  name: 'default'
-  properties: {
-    cors: {
-      corsRules: []
-    }
-  }
-}
-
-resource workspaces_abpl_hub_name_resource 'Microsoft.MachineLearningServices/workspaces@2024-07-01-preview' = {
+resource workspaces_hub_resource 'Microsoft.MachineLearningServices/workspaces@2024-07-01-preview' = {
   name: hubresourceName
   location: location
   tags: { }
@@ -263,7 +151,7 @@ resource workspaces_abpl_hub_name_resource 'Microsoft.MachineLearningServices/wo
   }
   properties: {
     friendlyName: workspaces_abpl_hub_name
-    storageAccount: searchServices_abpl_search_name_resource.id
+    storageAccount: searchServices_storage_resource.id
     keyVault: vaults_kv_resource.id
     hbiWorkspace: false
     managedNetwork: {
@@ -284,13 +172,13 @@ resource workspaces_abpl_hub_name_resource 'Microsoft.MachineLearningServices/wo
   }
 }
 
-resource workspaces_abpl_hub_name_abpl_aoai191036897597 'Microsoft.MachineLearningServices/workspaces/connections@2024-07-01-preview' = {
-  parent: workspaces_abpl_hub_name_resource
-  name: 'abpl-aoai191036897597'
+resource hub_connection_csvc 'Microsoft.MachineLearningServices/workspaces/connections@2024-07-01-preview' = {
+  parent: workspaces_hub_resource
+  name: 'csvc-connection'
   properties: {
     authType: 'AAD'
     category: 'AIServices'
-    target: 'https://${accounts_abpl_aoai_name}.cognitiveservices.azure.com/'
+    target: 'https://${accounts_name}.cognitiveservices.azure.com/'
     useWorkspaceManagedIdentity: true
     isSharedToAll: true
     sharedUserList: []
@@ -306,13 +194,13 @@ resource workspaces_abpl_hub_name_abpl_aoai191036897597 'Microsoft.MachineLearni
   }
 }
 
-resource workspaces_abpl_hub_name_abpl_aoai191036897597_aoai 'Microsoft.MachineLearningServices/workspaces/connections@2024-07-01-preview' = {
-  parent: workspaces_abpl_hub_name_resource
-  name: 'abpl-aoai191036897597_aoai'
+resource hub_connection_openai 'Microsoft.MachineLearningServices/workspaces/connections@2024-07-01-preview' = {
+  parent: workspaces_hub_resource
+  name: 'openai-connection'
   properties: {
     authType: 'AAD'
     category: 'AzureOpenAI'
-    target: 'https://${accounts_abpl_aoai_name}.openai.azure.com/'
+    target: 'https://${accounts_name}.openai.azure.com/'
     useWorkspaceManagedIdentity: true
     isSharedToAll: true
     sharedUserList: []
@@ -328,13 +216,13 @@ resource workspaces_abpl_hub_name_abpl_aoai191036897597_aoai 'Microsoft.MachineL
   }
 }
 
-resource workspaces_abpl_hub_name_AzureAISearch 'Microsoft.MachineLearningServices/workspaces/connections@2024-07-01-preview' = {
-  parent: workspaces_abpl_hub_name_resource
-  name: 'AzureAISearch'
+resource hub_connection_azureai_earch 'Microsoft.MachineLearningServices/workspaces/connections@2024-07-01-preview' = {
+  parent: workspaces_hub_resource
+  name: 'aisearch-connection'
   properties: {
     authType: 'AAD'
     category: 'CognitiveSearch'
-    target: 'https://${accounts_abpl_aoai_name}.search.windows.net'
+    target: 'https://${accounts_name}.search.windows.net'
     useWorkspaceManagedIdentity: false
     isSharedToAll: true
     sharedUserList: []
