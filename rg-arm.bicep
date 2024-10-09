@@ -1,4 +1,4 @@
-param label string = '30'
+param label string = '32'
 param base_name string = 'abpl${label}'
 param vaults_kv_name string = '${base_name}kvpelithne'
 param workspaces_hub_name string = '${base_name}hubpelithne'
@@ -9,7 +9,9 @@ param ai_service_resource_name string = '${base_name}accountsaoai'
 param openai_resource_name string = '${base_name}openai'
 param search_service_resource_name string = '${base_name}searchservices'
 param document_intelligence_name string = '${base_name}docintelligence'
-
+param cosmosdb_account_name string = '${base_name}cosmosdb'
+param app_insights_name string = '${base_name}appinsights'
+param log_analytics_workspace_name string = '${base_name}loganalytics'
 param open_ai_model string = 'gpt-4o'
 param embedding_model string = 'text-embedding-ada-002'
 param tags object = {}
@@ -18,6 +20,54 @@ param location string = 'swedencentral'
 var discoveryURL = 'https://${location}.api.azureml.ms/discovery'
 var defaultWorkspaceResourceGroup = '/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}'
 var tenant_id = subscription().tenantId
+
+resource log_analytics_workspace 'Microsoft.OperationalInsights/workspaces@2021-06-01' = {
+  name: log_analytics_workspace_name
+  location: location
+  properties: {
+    sku: {
+      name: 'PerGB2018'
+    }
+    retentionInDays: 30
+  }
+  tags: tags
+}
+
+resource app_insights 'Microsoft.Insights/components@2020-02-02' = {
+  name: app_insights_name
+  location: location
+  kind: 'web'
+  properties: {
+    Application_Type: 'web'
+    WorkspaceResourceId: log_analytics_workspace.id
+  }
+  tags: tags
+}
+
+resource cosmosdb_account 'Microsoft.DocumentDB/databaseAccounts@2021-04-15' = {
+  name: cosmosdb_account_name
+  location: location
+  kind: 'GlobalDocumentDB'
+  properties: {
+    databaseAccountOfferType: 'Standard'
+    locations: [
+      {
+        locationName: location
+        failoverPriority: 0
+        isZoneRedundant: false
+      }
+    ]
+    consistencyPolicy: {
+      defaultConsistencyLevel: 'Session'
+    }
+    capabilities: [
+      {
+        name: 'EnableServerless'
+      }
+    ]
+  }
+  tags: tags
+}
 
 resource document_intelligence 'Microsoft.CognitiveServices/accounts@2024-06-01-preview' = {
   name: document_intelligence_name
