@@ -11,7 +11,7 @@ Change directory
 cd azure_ai_service
 ````
 
-Edit the parameter ````label```` somehow that makes sense. It could for instance be a number. 
+in the ````rg-arm.bicep```` file, edit the parameter ````label```` somehow that makes sense. It could for instance be a number. 
 
 ````
 param label string = '4'
