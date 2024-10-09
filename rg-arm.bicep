@@ -1,4 +1,4 @@
-param iteration string = '18'
+param iteration string = '19'
 param baseName string = 'abpl${iteration}'
 param vaults_kv_name string = '${baseName}abplkvpelithne'
 param workspaces_abpl_hub_name string = '${baseName}hubpelithne'
@@ -15,9 +15,7 @@ var hubresourceName = '${baseName}workspaces_hub'
 var aiServiceResourceName = '${baseName}accountsaoai'
 var searchServiceResourceName = '${baseName}searchservices'
 
-
 var defaultWorkspaceResourceGroup = '/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}'
-
 
 resource accounts_resource 'Microsoft.CognitiveServices/accounts@2024-06-01-preview' = {
   name: aiServiceResourceName
@@ -40,11 +38,11 @@ resource vaults_kv_resource 'Microsoft.KeyVault/vaults@2024-04-01-preview' = {
       family: 'A'
       name: 'standard'
     }
-    tenantId: '1758a79e-7b9d-4949-b202-930c3c29a179'
+    tenantId: '11111111-0000-0000-0000-11111111'
     accessPolicies: [
       {
-        tenantId: '1758a79e-7b9d-4949-b202-930c3c29a179'
-        objectId: '76e1a2b7-ecc4-4074-94af-3ea5d6df1d4d'
+        tenantId: '11111111-0000-0000-0000-11111111'
+        objectId: '11111111-0000-0000-0000-11111111'
         permissions: {
           keys: [
             'all'
@@ -126,14 +124,6 @@ resource searchServices_storage_resource 'Microsoft.Storage/storageAccounts@2023
       keySource: 'Microsoft.Storage'
     }
     accessTier: 'Hot'
-  }
-}
-
-resource accounts_name_Default 'Microsoft.CognitiveServices/accounts/defenderForAISettings@2024-06-01-preview' = {
-  parent: accounts_resource
-  name: 'Default'
-  properties: {
-    state: 'Disabled'
   }
 }
 
