@@ -1,9 +1,12 @@
-param iteration string = '19'
+param iteration string = '20'
 param baseName string = 'abpl${iteration}'
-param vaults_kv_name string = '${baseName}abplkvpelithne'
-param workspaces_abpl_hub_name string = '${baseName}hubpelithne'
-param searchServices_storage_name string = '${baseName}abplstoragepelithne'
+param vaults_kv_name string = '${baseName}kvpelithne'
+param workspaces_hub_name string = '${baseName}hubpelithne'
+param ss_storage_name string = '${baseName}storagepelithne'
 param accounts_name string = '${baseName}aoaipelithne'
+param hub_resource_name string = '${baseName}workspaces_hub'
+param ai_ervice_resource_name string = '${baseName}accountsaoai'
+param search_service_resource_name string = '${baseName}searchservices'
 param storage_account_sku string = 'Standard_GRS'
 param ai_service_sku string = 'S0'
 param search_service_sku string = 'standard'
@@ -11,21 +14,17 @@ param hub_sku string = 'Basic'
 param location string = 'swedencentral'
 
 var discoveryURL = 'https://${location}.api.azureml.ms/discovery'
-var hubresourceName = '${baseName}workspaces_hub'
-var aiServiceResourceName = '${baseName}accountsaoai'
-var searchServiceResourceName = '${baseName}searchservices'
-
 var defaultWorkspaceResourceGroup = '/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}'
 
 resource accounts_resource 'Microsoft.CognitiveServices/accounts@2024-06-01-preview' = {
-  name: aiServiceResourceName
+  name: ai_ervice_resource_name
   location: location
   sku: {
     name: ai_service_sku
   }
   kind: 'AIServices'
   properties: {
-    customSubDomainName: aiServiceResourceName
+    customSubDomainName: ai_ervice_resource_name
     publicNetworkAccess: 'Enabled'
   }
 }
@@ -38,11 +37,11 @@ resource vaults_kv_resource 'Microsoft.KeyVault/vaults@2024-04-01-preview' = {
       family: 'A'
       name: 'standard'
     }
-    tenantId: '11111111-0000-0000-0000-11111111'
+    tenantId: '1758a79e-7b9d-4949-b202-930c3c29a179'
     accessPolicies: [
       {
-        tenantId: '11111111-0000-0000-0000-11111111'
-        objectId: '11111111-0000-0000-0000-11111111'
+        tenantId: '1758a79e-7b9d-4949-b202-930c3c29a179'
+        objectId: '76e1a2b7-ecc4-4074-94af-3ea5d6df1d4d'
         permissions: {
           keys: [
             'all'
@@ -64,8 +63,8 @@ resource vaults_kv_resource 'Microsoft.KeyVault/vaults@2024-04-01-preview' = {
   }
 }
 
-resource searchServices_resource 'Microsoft.Search/searchServices@2024-06-01-preview' = {
-  name: searchServiceResourceName
+resource search_services_resource 'Microsoft.Search/searchServices@2024-06-01-preview' = {
+  name: search_service_resource_name
   location: location
   sku: {
     name: search_service_sku
@@ -91,8 +90,8 @@ resource searchServices_resource 'Microsoft.Search/searchServices@2024-06-01-pre
   }
 }
 
-resource searchServices_storage_resource 'Microsoft.Storage/storageAccounts@2023-05-01' = {
-  name: searchServices_storage_name
+resource search_services_storage_resource 'Microsoft.Storage/storageAccounts@2023-05-01' = {
+  name: ss_storage_name
   location: location
   sku: {
     name: storage_account_sku
@@ -128,7 +127,7 @@ resource searchServices_storage_resource 'Microsoft.Storage/storageAccounts@2023
 }
 
 resource workspaces_hub_resource 'Microsoft.MachineLearningServices/workspaces@2024-07-01-preview' = {
-  name: hubresourceName
+  name: hub_resource_name
   location: location
   tags: { }
   sku: {
@@ -140,8 +139,8 @@ resource workspaces_hub_resource 'Microsoft.MachineLearningServices/workspaces@2
     type: 'SystemAssigned'
   }
   properties: {
-    friendlyName: workspaces_abpl_hub_name
-    storageAccount: searchServices_storage_resource.id
+    friendlyName: workspaces_hub_name
+    storageAccount: search_services_storage_resource.id
     keyVault: vaults_kv_resource.id
     hbiWorkspace: false
     managedNetwork: {
@@ -206,7 +205,7 @@ resource hub_connection_openai 'Microsoft.MachineLearningServices/workspaces/con
   }
 }
 
-resource hub_connection_azureai_earch 'Microsoft.MachineLearningServices/workspaces/connections@2024-07-01-preview' = {
+resource hub_connection_azureai_search 'Microsoft.MachineLearningServices/workspaces/connections@2024-07-01-preview' = {
   parent: workspaces_hub_resource
   name: 'aisearch-connection'
   properties: {
@@ -220,7 +219,7 @@ resource hub_connection_azureai_earch 'Microsoft.MachineLearningServices/workspa
     peStatus: 'NotApplicable'
     metadata: {
       ApiType: 'Azure'
-      ResourceId: searchServices_resource.id
+      ResourceId: search_services_resource.id
       location: location
       ApiVersion: '2024-05-01-preview'
       DeploymentApiVersion: '2023-11-01'
