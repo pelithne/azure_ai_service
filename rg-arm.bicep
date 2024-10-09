@@ -8,6 +8,8 @@ param hub_resource_name string = '${base_name}workspacehubpelithne'
 param ai_service_resource_name string = '${base_name}accountsaoai'
 param openai_resource_name string = '${base_name}openai'
 param search_service_resource_name string = '${base_name}searchservices'
+param document_intelligence_name string = '${base_name}docintelligence'
+
 param open_ai_model string = 'gpt-4o'
 param embedding_model string = 'text-embedding-ada-002'
 param tags object = {}
@@ -16,6 +18,20 @@ param location string = 'swedencentral'
 var discoveryURL = 'https://${location}.api.azureml.ms/discovery'
 var defaultWorkspaceResourceGroup = '/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}'
 var tenant_id = subscription().tenantId
+
+resource document_intelligence 'Microsoft.CognitiveServices/accounts@2024-06-01-preview' = {
+  name: document_intelligence_name
+  location: location
+  sku: {
+    name: 'S0'
+  }
+  kind: 'FormRecognizer'
+  properties: {
+    customSubDomainName: document_intelligence_name
+    publicNetworkAccess: 'Enabled'
+  }
+  tags: tags
+}
 
 resource ai_service_resource 'Microsoft.CognitiveServices/accounts@2024-06-01-preview' = {
   name: ai_service_resource_name
