@@ -1,19 +1,23 @@
-param label string = '22'
+param label string = '30'
 param base_name string = 'abpl${label}'
 param vaults_kv_name string = '${base_name}kvpelithne'
 param workspaces_hub_name string = '${base_name}hubpelithne'
-param ss_storage_name string = '${base_name}storagepelithne'
+param storage_name string = '${base_name}storagepelithne'
 param accounts_name string = '${base_name}aoaipelithne'
-param hub_resource_name string = '${base_name}workspaces_hub'
+param hub_resource_name string = '${base_name}workspacehubpelithne'
 param ai_service_resource_name string = '${base_name}accountsaoai'
+param openai_resource_name string = '${base_name}openai'
 param search_service_resource_name string = '${base_name}searchservices'
+param open_ai_model string = 'gpt-4o'
+param embedding_model string = 'text-embedding-ada-002'
+param tags object = {}
 param location string = 'swedencentral'
 
 var discoveryURL = 'https://${location}.api.azureml.ms/discovery'
 var defaultWorkspaceResourceGroup = '/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}'
 var tenant_id = subscription().tenantId
 
-resource accounts_resource 'Microsoft.CognitiveServices/accounts@2024-06-01-preview' = {
+resource ai_service_resource 'Microsoft.CognitiveServices/accounts@2024-06-01-preview' = {
   name: ai_service_resource_name
   location: location
   sku: {
@@ -25,6 +29,21 @@ resource accounts_resource 'Microsoft.CognitiveServices/accounts@2024-06-01-prev
     publicNetworkAccess: 'Enabled'
   }
 }
+
+resource openai_account 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
+  name: openai_resource_name
+  location: location
+  kind: 'OpenAI'
+  properties: {
+    customSubDomainName: openai_resource_name
+    publicNetworkAccess: 'Enabled'
+  }
+  sku: {
+    name: 'S0'
+  }
+  tags: tags
+}
+
 
 resource vaults_kv_resource 'Microsoft.KeyVault/vaults@2024-04-01-preview' = {
   name: vaults_kv_name
@@ -66,8 +85,8 @@ resource search_services_resource 'Microsoft.Search/searchServices@2024-06-01-pr
   }
 }
 
-resource search_services_storage_resource 'Microsoft.Storage/storageAccounts@2023-05-01' = {
-  name: ss_storage_name
+resource storage_resource 'Microsoft.Storage/storageAccounts@2023-05-01' = {
+  name: storage_name
   location: location
   sku: {
     name: 'Standard_GRS'
@@ -116,7 +135,7 @@ resource workspaces_hub_resource 'Microsoft.MachineLearningServices/workspaces@2
   }
   properties: {
     friendlyName: workspaces_hub_name
-    storageAccount: search_services_storage_resource.id
+    storageAccount: storage_resource.id
     keyVault: vaults_kv_resource.id
     hbiWorkspace: false
     managedNetwork: {
@@ -151,13 +170,15 @@ resource hub_connection_csvc 'Microsoft.MachineLearningServices/workspaces/conne
     peStatus: 'NotApplicable'
     metadata: {
       ApiType: 'Azure'
-      ResourceId: accounts_resource.id
+      ResourceId: ai_service_resource.id
       location: location
       ApiVersion: '2023-07-01-preview'
       DeploymentApiVersion: '2023-10-01-preview'
     }
   }
 }
+
+
 
 resource hub_connection_openai 'Microsoft.MachineLearningServices/workspaces/connections@2024-07-01-preview' = {
   parent: workspaces_hub_resource
@@ -173,7 +194,7 @@ resource hub_connection_openai 'Microsoft.MachineLearningServices/workspaces/con
     peStatus: 'NotApplicable'
     metadata: {
       ApiType: 'Azure'
-      ResourceId: accounts_resource.id
+      ResourceId: openai_account.id
       location: location
       ApiVersion: '2023-07-01-preview'
       DeploymentApiVersion: '2023-10-01-preview'
@@ -201,4 +222,38 @@ resource hub_connection_azureai_search 'Microsoft.MachineLearningServices/worksp
       DeploymentApiVersion: '2023-11-01'
     }
   }
+}
+
+
+resource openai_model_deployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = {
+  parent: openai_account
+  name: open_ai_model
+  properties: {
+    model: {
+      format: 'OpenAI'
+      name: open_ai_model
+      version: '2024-08-06'
+    }
+  }
+  sku: {
+    name: 'Standard'
+    capacity: 2
+  }
+}
+
+resource embedding_model_deployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = {
+  parent: openai_account
+  name: embedding_model
+  properties: {
+    model: {
+      format: 'OpenAI'
+      name: embedding_model
+      version: '2'
+    }
+  }
+  sku: {
+    name: 'Standard'
+    capacity: 2
+  }
+  dependsOn: [openai_model_deployment]
 }
