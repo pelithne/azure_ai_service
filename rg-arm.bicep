@@ -1,30 +1,27 @@
-param iteration string = '20'
-param baseName string = 'abpl${iteration}'
+param label string = '22'
+param baseName string = 'abpl${label}'
 param vaults_kv_name string = '${baseName}kvpelithne'
 param workspaces_hub_name string = '${baseName}hubpelithne'
 param ss_storage_name string = '${baseName}storagepelithne'
 param accounts_name string = '${baseName}aoaipelithne'
 param hub_resource_name string = '${baseName}workspaces_hub'
-param ai_ervice_resource_name string = '${baseName}accountsaoai'
+param ai_service_resource_name string = '${baseName}accountsaoai'
 param search_service_resource_name string = '${baseName}searchservices'
-param storage_account_sku string = 'Standard_GRS'
-param ai_service_sku string = 'S0'
-param search_service_sku string = 'standard'
-param hub_sku string = 'Basic'
 param location string = 'swedencentral'
 
 var discoveryURL = 'https://${location}.api.azureml.ms/discovery'
 var defaultWorkspaceResourceGroup = '/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}'
+var tenant_id = subscription().tenantId
 
 resource accounts_resource 'Microsoft.CognitiveServices/accounts@2024-06-01-preview' = {
-  name: ai_ervice_resource_name
+  name: ai_service_resource_name
   location: location
   sku: {
-    name: ai_service_sku
+    name: 'S0'
   }
   kind: 'AIServices'
   properties: {
-    customSubDomainName: ai_ervice_resource_name
+    customSubDomainName: ai_service_resource_name
     publicNetworkAccess: 'Enabled'
   }
 }
@@ -37,29 +34,8 @@ resource vaults_kv_resource 'Microsoft.KeyVault/vaults@2024-04-01-preview' = {
       family: 'A'
       name: 'standard'
     }
-    tenantId: '1758a79e-7b9d-4949-b202-930c3c29a179'
-    accessPolicies: [
-      {
-        tenantId: '1758a79e-7b9d-4949-b202-930c3c29a179'
-        objectId: '76e1a2b7-ecc4-4074-94af-3ea5d6df1d4d'
-        permissions: {
-          keys: [
-            'all'
-          ]
-          secrets: [
-            'all'
-          ]
-          certificates: [
-            'all'
-          ]
-          storage: []
-        }
-      }
-    ]
-    enabledForDeployment: false
-    vaultUri: 'https://${vaults_kv_name}.vault.azure.net/'
-    provisioningState: 'Succeeded'
-    publicNetworkAccess: 'Enabled'
+    tenantId: tenant_id
+    accessPolicies: []
   }
 }
 
@@ -67,7 +43,7 @@ resource search_services_resource 'Microsoft.Search/searchServices@2024-06-01-pr
   name: search_service_resource_name
   location: location
   sku: {
-    name: search_service_sku
+    name: 'standard'
   }
   properties: {
     replicaCount: 1
@@ -94,7 +70,7 @@ resource search_services_storage_resource 'Microsoft.Storage/storageAccounts@202
   name: ss_storage_name
   location: location
   sku: {
-    name: storage_account_sku
+    name: 'Standard_GRS'
     tier: 'Standard'
   }
   kind: 'StorageV2'
@@ -131,8 +107,8 @@ resource workspaces_hub_resource 'Microsoft.MachineLearningServices/workspaces@2
   location: location
   tags: { }
   sku: {
-    name: hub_sku
-    tier: hub_sku
+    name: 'Basic'
+    tier: 'Basic'
   }
   kind: 'Hub'
   identity: {
