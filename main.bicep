@@ -1,14 +1,14 @@
-// Parameters
+// Parameters with default values. These can be overridden at deployment time using the -p flag.S
 param base_name string = 'pelithne'
 param tags object = {}
 param location string = resourceGroup().location
 
 // Variables
-var vaults_kv_name = '${base_name}kvpelithne'
-var storage_name = '${base_name}storagepelithne'
-var accounts_name = '${base_name}aoaipelithne'
-var hub_resource_name = '${base_name}workspacehubpelithne'
-var ai_service_resource_name = '${base_name}accountsaoai'
+var vaults_kv_name = '${base_name}keyvault'
+var storage_name = '${base_name}storage'
+var accounts_name = '${base_name}aoai'
+var hub_resource_name = '${base_name}workspacehub'
+var ai_service_resource_name = '${base_name}azureai'
 var openai_resource_name = '${base_name}openai'
 var search_service_resource_name = '${base_name}searchservices'
 var document_intelligence_name = '${base_name}docintelligence'
