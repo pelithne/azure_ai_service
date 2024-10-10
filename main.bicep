@@ -1,7 +1,7 @@
 // Parameters
-param base_name string
-param location string
-param tags object
+param base_name string = 'pelithne'
+param tags object = {}
+param location string = resourceGroup().location
 
 // Variables
 var vaults_kv_name = '${base_name}kvpelithne'
@@ -44,6 +44,22 @@ module cosmosdbAccount 'modules/cosmosdbaccount.bicep' = {
     name: cosmosdb_account_name
     location: location
     tags: tags
+  }
+}
+
+module storageAccount 'modules/storageaccount.bicep' = {
+  name: 'storageAccountModule'
+  params: {
+    storage_name: storage_name
+    location: location
+  }
+}
+
+module keyVault 'modules/keyvault.bicep' = {
+  name: 'keyVaultModule'
+  params: {
+    vaults_kv_name: vaults_kv_name
+    location: location
   }
 }
 
@@ -97,66 +113,21 @@ module documentIntelligence 'modules/documentintelligence.bicep' = {
 }
 
 
-module storageAccount 'modules/storageaccount.bicep' = {
-  name: 'storageAccountModule'
-  params: {
-    storage_name: storage_name
-    location: location
-  }
-}
-
-module keyVault 'modules/keyvault.bicep' = {
-  name: 'keyVaultModule'
-  params: {
-    vaults_kv_name: vaults_kv_name
-    location: location
-  }
-}
-
-module hubConnectionCsvc 'modules/hubconnectioncsvc.bicep' = {
-  name: 'hubConnectionCsvc'
-  params: {
-    parentResourceId: hub_resource_name
-    accountsName: accounts_name
-    aiServiceResourceId: aiServiceAccount.outputs.id
-    location: location
-  }
-  dependsOn: [workspaceHub]
-}
-
-module hubConnectionopenai 'modules/hubconnectionopenai.bicep' = {
-  name: 'hubConnectionopenai'
-  params: {
-    parentResourceId: hub_resource_name
-    accountsName: accounts_name
-    aoaiResourceId: openai_resource.outputs.id
-    location: location
-  }
-  dependsOn: [workspaceHub]
-}
-
-module hubConnectionaisearch 'modules/hubconnectionaisearch.bicep' = {
-  name: 'hubConnectionaisearch'
-  params: {
-    parentResourceId: hub_resource_name
-    accountsName: accounts_name
-    aiSearchResourceId: searchService.outputs.id
-    location: location
-  }
-  dependsOn: [workspaceHub]
-}
-
-module hubConnectiondocintelligence 'modules/hubconnectiondocintelligence.bicep' = {
+module hubConnections 'modules/hubconnections.bicep' = {
   name: 'hubConnectiondocintelligence'
   params: {
     parentResourceId: hub_resource_name
     accountsName: accounts_name
-    docIntelligenceResourceId: documentIntelligence.outputs.id
+    aiSearchResourceId: searchService.outputs.id
+    aoaiResourceId: openai_resource.outputs.id
+    aiServiceResourceId: aiServiceAccount.outputs.id
+    aiSearchName: 'aisearch'
+    aoaiName: 'openai'
+    aiServiceName: 'azureai'
     location: location
   }
   dependsOn: [workspaceHub]
 }
-
 
 module modelDeployments 'modules/modeldeployments.bicep' = {
   name: 'modelDeployments'
