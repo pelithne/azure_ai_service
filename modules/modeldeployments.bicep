@@ -1,4 +1,4 @@
-param parentResourceId string
+param parentResource string
 param openAiModelName string
 param openAiModelVersion string
 param embeddingModelName string
@@ -6,12 +6,12 @@ param embeddingModelVersion string
 param skuName string
 param skuCapacity int
 
-resource openai 'Microsoft.CognitiveServices/accounts@2023-05-01' existing = {
-  name: parentResourceId
+resource azureai 'Microsoft.CognitiveServices/accounts@2023-05-01' existing = {
+  name: parentResource
 }
 
 resource openai_model_deployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = {
-  parent: openai
+  parent: azureai
   name: openAiModelName
   properties: {
     model: {
@@ -27,7 +27,7 @@ resource openai_model_deployment 'Microsoft.CognitiveServices/accounts/deploymen
 }
 
 resource embedding_model_deployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = {
-  parent: openai
+  parent: azureai
   name: embeddingModelName
   properties: {
     model: {

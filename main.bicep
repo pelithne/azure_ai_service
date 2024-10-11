@@ -9,9 +9,7 @@ var storage_name = '${base_name}storage'
 var accounts_name = '${base_name}aoai'
 var hub_resource_name = '${base_name}workspacehub'
 var ai_service_resource_name = '${base_name}azureai'
-var openai_resource_name = '${base_name}openai'
 var search_service_resource_name = '${base_name}searchservices'
-var document_intelligence_name = '${base_name}docintelligence'
 var cosmosdb_account_name = '${base_name}cosmosdb'
 var app_insights_name = '${base_name}appinsights'
 var log_analytics_workspace_name = '${base_name}loganalytics'
@@ -85,15 +83,6 @@ module aiServiceAccount 'modules/aiserviceaccount.bicep' = {
   }
 }
 
-module openai_resource 'modules/openairesource.bicep' = {
-  name: openai_resource_name
-  params: {
-    name: openai_resource_name
-    location: location
-    tags: tags
-  }
-}
-
 module searchService 'modules/searchservice.bicep' = {
   name: 'searchService'
   params: {
@@ -103,26 +92,14 @@ module searchService 'modules/searchservice.bicep' = {
   }
 }
 
-module documentIntelligence 'modules/documentintelligence.bicep' = {
-  name: 'documentIntelligence'
-  params: {
-    name: document_intelligence_name
-    location: location
-    tags: tags
-  }
-}
-
-
 module hubConnections 'modules/hubconnections.bicep' = {
   name: 'hubConnectiondocintelligence'
   params: {
     parentResourceId: hub_resource_name
     accountsName: accounts_name
     aiSearchResourceId: searchService.outputs.id
-    aoaiResourceId: openai_resource.outputs.id
     aiServiceResourceId: aiServiceAccount.outputs.id
     aiSearchName: 'aisearch'
-    aoaiName: 'openai'
     aiServiceName: 'azureai'
     location: location
   }
@@ -132,7 +109,7 @@ module hubConnections 'modules/hubconnections.bicep' = {
 module modelDeployments 'modules/modeldeployments.bicep' = {
   name: 'modelDeployments'
   params: {
-    parentResourceId: openai_resource_name
+    parentResource: ai_service_resource_name
     openAiModelName: 'gpt-4o'
     openAiModelVersion: '2024-08-06'
     embeddingModelName: 'text-embedding-ada-002'
@@ -140,5 +117,5 @@ module modelDeployments 'modules/modeldeployments.bicep' = {
     skuName: 'Standard'
     skuCapacity: 2
   }
-  dependsOn: [openai_resource]
+  dependsOn: [aiServiceAccount]
 }
