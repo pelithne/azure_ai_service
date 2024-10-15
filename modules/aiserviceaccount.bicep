@@ -9,6 +9,7 @@ resource ai_service_account 'Microsoft.CognitiveServices/accounts@2021-04-30' = 
     name: 'S0'
   }
   kind: 'AIServices'
+
   properties: {
     customSubDomainName: name
     publicNetworkAccess: 'Enabled'

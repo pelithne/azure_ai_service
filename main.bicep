@@ -99,7 +99,7 @@ module hubConnections 'modules/hubconnections.bicep' = {
     accountsName: accounts_name
     aiSearchResourceId: searchService.outputs.id
     aiServiceResourceId: aiServiceAccount.outputs.id
-    aiSearchName: 'aisearch'
+    aiSearchName: search_service_resource_name
     aiServiceName: 'azureai'
     location: location
   }
@@ -119,3 +119,13 @@ module modelDeployments 'modules/modeldeployments.bicep' = {
   }
   dependsOn: [aiServiceAccount]
 }
+
+/*
+// Include custom roles module
+module customRoles 'modules/customroles.bicep' = {
+  name: 'customRoles'
+  params: {
+    location: location
+  }
+}
+*/

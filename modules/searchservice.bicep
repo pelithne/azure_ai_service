@@ -8,6 +8,9 @@ resource search_service 'Microsoft.Search/searchServices@2024-06-01-preview' = {
   sku: {
     name: 'standard'
   }
+  identity: {
+    type: 'SystemAssigned'
+  }
   properties: {
     replicaCount: 1
     partitionCount: 1

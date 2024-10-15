@@ -16,7 +16,7 @@ resource hub_connection_azureai_search 'Microsoft.MachineLearningServices/worksp
   properties: {
     authType: 'AAD'
     category: 'CognitiveSearch'
-    target: 'https://${accountsName}.search.windows.net'
+    target: 'https://${aiSearchName}.search.windows.net'
     useWorkspaceManagedIdentity: false
     isSharedToAll: true
     sharedUserList: []

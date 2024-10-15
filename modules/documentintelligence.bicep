@@ -9,6 +9,7 @@ resource document_intelligence 'Microsoft.CognitiveServices/accounts@2024-06-01-
     name: 'S0'
   }
   kind: 'FormRecognizer'
+
   properties: {
     customSubDomainName: name
     publicNetworkAccess: 'Enabled'

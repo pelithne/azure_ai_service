@@ -7,6 +7,9 @@ resource storage_resource 'Microsoft.Storage/storageAccounts@2021-04-01' = {
   sku: {
     name: 'Standard_LRS'
   }
+  identity: {
+    type: 'SystemAssigned'
+  }
   kind: 'StorageV2'
   properties: {
     accessTier: 'Hot'

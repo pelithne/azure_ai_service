@@ -6,6 +6,7 @@ resource openai_account 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
   name: name
   location: location
   kind: 'OpenAI'
+
   properties: {
     customSubDomainName: name
     publicNetworkAccess: 'Enabled'
