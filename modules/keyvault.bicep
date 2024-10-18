@@ -14,4 +14,5 @@ resource vaults_kv_resource 'Microsoft.KeyVault/vaults@2024-04-01-preview' = {
   }
 }
 
+
 output id string = vaults_kv_resource.id

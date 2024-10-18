@@ -21,4 +21,5 @@ resource cosmosdb_account 'Microsoft.DocumentDB/databaseAccounts@2021-04-15' = {
   tags: tags
 }
 
+
 output id string = cosmosdb_account.id

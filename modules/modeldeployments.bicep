@@ -14,6 +14,7 @@ resource openai_model_deployment 'Microsoft.CognitiveServices/accounts/deploymen
   parent: azureai
   name: openAiModelName
   properties: {
+    dynamicThrottlingEnabled: true
     model: {
       format: 'OpenAI'
       name: openAiModelName

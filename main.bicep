@@ -16,6 +16,8 @@ var log_analytics_workspace_name = '${base_name}loganalytics'
 var discovery_url = 'https://${location}.api.azureml.ms/discovery'
 var defaultWorkspaceResourceGroup = '/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}'
 
+
+
 // Modules
 module logAnalyticsWorkspace 'modules/loganalyticsworkspace.bicep' = {
   name: 'logAnalyticsWorkspace'
@@ -120,12 +122,22 @@ module modelDeployments 'modules/modeldeployments.bicep' = {
   dependsOn: [aiServiceAccount]
 }
 
-/*
+
+// Microsoft Defender module for all resources (on subscription level)
+module microsoftDefender 'modules/microsoft-defender.bicep' = {
+  name: 'microsoftDefender'
+  scope: subscription()
+  params: {}
+}
+
+
+
 // Include custom roles module
 module customRoles 'modules/customroles.bicep' = {
   name: 'customRoles'
+  scope: subscription()
   params: {
     location: location
   }
 }
-*/
+
