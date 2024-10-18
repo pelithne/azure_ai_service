@@ -23,10 +23,8 @@ resource search_service 'Microsoft.Search/searchServices@2024-06-01-preview' = {
     encryptionWithCmk: {
       enforcement: 'Unspecified'
     }
-    disableLocalAuth: false
-    authOptions: {
-      apiKeyOnly: {}
-    }
+    disableLocalAuth: true
+    authOptions: null
     disabledDataExfiltrationOptions: []
     semanticSearch: 'disabled'
   }

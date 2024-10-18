@@ -11,6 +11,7 @@ resource vaults_kv_resource 'Microsoft.KeyVault/vaults@2024-04-01-preview' = {
     }
     tenantId: subscription().tenantId
     accessPolicies: []
+    enableRbacAuthorization: true
   }
 }
 

@@ -17,7 +17,6 @@ var discovery_url = 'https://${location}.api.azureml.ms/discovery'
 var defaultWorkspaceResourceGroup = '/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}'
 
 
-
 // Modules
 module logAnalyticsWorkspace 'modules/loganalyticsworkspace.bicep' = {
   name: 'logAnalyticsWorkspace'
@@ -136,8 +135,20 @@ module microsoftDefender 'modules/microsoft-defender.bicep' = {
 module customRoles 'modules/customroles.bicep' = {
   name: 'customRoles'
   scope: subscription()
-  params: {
-    location: location
-  }
 }
 
+
+
+// Include policies module, with example deny VM Sku list
+module policies 'modules/policies.bicep' = {
+  name: 'policies'
+  scope: subscription()
+  params: {
+    listOfDeniedVMSizes: [
+      'Standard_D1_v2'
+      'Standard_D2_v2'
+      'Standard_D3_v2'
+      'Standard_D4_v2'
+    ]
+  }
+}
