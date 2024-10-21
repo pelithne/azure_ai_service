@@ -170,6 +170,7 @@ module roleAssignment 'modules/roleassignments.bicep' = {
     searchServicesPrincipalId: searchService.outputs.principalId
     hubPrincipalId: workspaceHub.outputs.principalId
     searchServiceName: searchService.name
+    aiServiceName: aiServiceAccount.name
   }
   dependsOn: [
     workspaceHub, aiServiceAccount, searchService, hubConnections, modelDeployments

@@ -6,6 +6,7 @@ param aiServicesPrincipalId string
 param searchServicesPrincipalId string
 param hubPrincipalId string
 param searchServiceName string
+param aiServiceName string
 
 // Reference the existing storage account
 resource storageAccount 'Microsoft.Storage/storageAccounts@2021-04-01' existing = {
@@ -36,7 +37,7 @@ resource storageBlobDataReaderAssignment 'Microsoft.Authorization/roleAssignment
 }
 
 // Role Assignment for Hub to be Search Service Contributor on Search Service
-resource searchServiceContributorAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+resource searchServiceContributorAssignmentforHub 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(searchService.id, 'Search Service Contributor', hubPrincipalId)
   properties: {
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7ca78c08-252a-4471-8644-bb5ff32d4ba0') // Search Service Contributor
@@ -50,5 +51,23 @@ resource searchIndexDataContributorAssignment 'Microsoft.Authorization/roleAssig
   properties: {
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '8ebe5a00-799e-43f5-93ac-243d3dce84a7') // Search Index Data Contributor
     principalId: hubPrincipalId
+  }
+}
+
+// Role Assignment for AI Services to be Search Index Data Reader on Search Service
+resource searchIndexDataReaderAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(searchService.id, 'Search Index Data Reader', aiServicesPrincipalId)
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '1407120a-92aa-4202-b7e9-c0e197c71c8f') // Search Index Data Reader
+    principalId: aiServicesPrincipalId
+  }
+}
+
+// Role Assignment for AI Services to be Search Service Contributor on Search Service
+resource searchServiceContributorAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(searchService.id, 'Search Service Contributor', aiServicesPrincipalId)
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7ca78c08-252a-4471-8644-bb5ff32d4ba0') // Search Service Contributor
+    principalId: aiServicesPrincipalId
   }
 }
