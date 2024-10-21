@@ -17,7 +17,7 @@ var discovery_url = 'https://${location}.api.azureml.ms/discovery'
 var defaultWorkspaceResourceGroup = '/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}'
 
 
-/*
+
 // Modules
 module logAnalyticsWorkspace 'modules/loganalyticsworkspace.bicep' = {
   name: 'logAnalyticsWorkspace'
@@ -137,7 +137,7 @@ module customRoles 'modules/customroles.bicep' = {
   scope: subscription()
 }
 
-*/
+
 
 
 
@@ -154,6 +154,9 @@ module policies 'modules/policies.bicep' = {
       'Standard_D4_v2'
     ]
   }
+  dependsOn: [
+    workspaceHub, aiServiceAccount, searchService, hubConnections, modelDeployments
+  ]
 }
 
 
