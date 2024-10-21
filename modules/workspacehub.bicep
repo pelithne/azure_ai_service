@@ -42,3 +42,6 @@ resource workspace_hub 'Microsoft.MachineLearningServices/workspaces@2024-07-01-
 }
 
 output name string = workspace_hub.name
+
+// Output the principal IDs
+output principalId string = workspace_hub.identity.principalId

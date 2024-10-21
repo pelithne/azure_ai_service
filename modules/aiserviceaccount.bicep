@@ -19,3 +19,4 @@ resource ai_service_account 'Microsoft.CognitiveServices/accounts@2021-04-30' = 
 }
 
 output id string = ai_service_account.id 
+output principalId string = ai_service_account.identity.principalId

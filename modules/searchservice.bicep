@@ -31,3 +31,5 @@ resource search_service 'Microsoft.Search/searchServices@2024-06-01-preview' = {
 }
 
 output id string = search_service.id
+// output search service principalId
+output principalId string = search_service.identity.principalId 

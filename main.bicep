@@ -161,3 +161,17 @@ module policies 'modules/policies.bicep' = {
 
 
 
+// call role assignments module, roleassignments.bicep 
+module roleAssignment 'modules/roleassignments.bicep' = {
+  name: 'roleAssignment'
+  params: {
+    storageAccountName: storage_name
+    aiServicesPrincipalId: aiServiceAccount.outputs.principalId
+    searchServicesPrincipalId: searchService.outputs.principalId
+    hubPrincipalId: workspaceHub.outputs.principalId
+    searchServiceName: searchService.name
+  }
+  dependsOn: [
+    workspaceHub, aiServiceAccount, searchService, hubConnections, modelDeployments
+  ]
+}
