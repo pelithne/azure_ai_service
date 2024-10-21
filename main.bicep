@@ -17,6 +17,7 @@ var discovery_url = 'https://${location}.api.azureml.ms/discovery'
 var defaultWorkspaceResourceGroup = '/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}'
 
 
+/*
 // Modules
 module logAnalyticsWorkspace 'modules/loganalyticsworkspace.bicep' = {
   name: 'logAnalyticsWorkspace'
@@ -130,12 +131,13 @@ module microsoftDefender 'modules/microsoft-defender.bicep' = {
 }
 
 
-
 // Include custom roles module
 module customRoles 'modules/customroles.bicep' = {
   name: 'customRoles'
   scope: subscription()
 }
+
+*/
 
 
 
@@ -144,6 +146,7 @@ module policies 'modules/policies.bicep' = {
   name: 'policies'
   scope: subscription()
   params: {
+    location: location
     listOfDeniedVMSizes: [
       'Standard_D1_v2'
       'Standard_D2_v2'
@@ -152,3 +155,6 @@ module policies 'modules/policies.bicep' = {
     ]
   }
 }
+
+
+

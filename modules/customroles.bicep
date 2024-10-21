@@ -1,6 +1,5 @@
 targetScope = 'subscription'
 
-var scope = '/subscriptions/${subscription().id}'
 
 // Custom Project Member/Owner Role
 resource customProjectMemberOwner 'Microsoft.Authorization/roleDefinitions@2022-04-01' = {
@@ -9,7 +8,7 @@ resource customProjectMemberOwner 'Microsoft.Authorization/roleDefinitions@2022-
     roleName: 'Custom Project Member/Owner'
     description: 'Custom role-based access control for Project Members and Project Owners in AI Studio'
     assignableScopes: [
-      scope
+      subscription().id
     ]
     permissions: [
       {
@@ -101,7 +100,7 @@ resource customHubOwner 'Microsoft.Authorization/roleDefinitions@2022-04-01' = {
     roleName: 'Custom Hub Owner'
     description: 'Custom role-based access control for Hub Owners in AI Studio'
     assignableScopes: [
-      scope
+      subscription().id
     ]
     permissions: [
       {
@@ -161,7 +160,7 @@ resource customPlatformAdministrator 'Microsoft.Authorization/roleDefinitions@20
     roleName: 'Custom Platform Administrator'
     description: 'Custom role-based access control for Platform Administrators in AI Studio'
     assignableScopes: [
-      scope
+      subscription().id
     ]
     permissions: [
       {
