@@ -25,3 +25,11 @@ Deploy the resources in the template, to the resource group created above. Use t
 ````
 az deployment group create  -g azure-ai --template-file main.bicep -p base_name=fghjdfghsd
 ````
+
+## Common problems
+Sometimes the script will fail. There are a few common reason this can happen:
+
+* The "base_name" input parameter is not unique enough. This can cause some resources (e.g. Key Vault) to get a name that is not globally unique.
+* The "base_name" input parameter contains characters that are not allowed in some resources. For simplicity it's good to only use lowercase characters (a-z and no funny things like åäö).
+* The script creates a few *Custom Roles*. If a Custom Role with the same name as the one created by the script exist, the deployment will fail.
+* The script creates a few *Azure Policy Assignments*. If the same assignment already exists, the deployment will fail.
