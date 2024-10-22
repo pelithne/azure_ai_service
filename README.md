@@ -2,7 +2,7 @@
 
 The bicep templates in this repository helps you set up various Azure AI resources like Azure AI Hub, Azure OpenAI, Document Intelligence. Along with this a number of surrounding/supporting services like Keyvault, CosmosDB, Log Analytics and more are created.
 
-
+All the resources are created using modules, which are located under /modules. The modules are controlled from the main bicep file, called main.bicep.
 
 ## How to deploy this platform
 clone the repo
