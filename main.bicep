@@ -1,5 +1,7 @@
-// Parameters with default values. These can be overridden at deployment time using the -p flag.S
-param base_name string = 'pelithne'
+// Parameters with default values. These can be overridden at deployment time using the -p flag.
+
+@description('The base name which should only contain lowercase characters (a to z).')
+param base_name string = 'abcdefghijklmnopqrstuvxyz'
 param tags object = {}
 param location string = resourceGroup().location
 
@@ -15,7 +17,6 @@ var app_insights_name = '${base_name}appinsights'
 var log_analytics_workspace_name = '${base_name}loganalytics'
 var discovery_url = 'https://${location}.api.azureml.ms/discovery'
 var defaultWorkspaceResourceGroup = '/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}'
-
 
 
 // Modules
