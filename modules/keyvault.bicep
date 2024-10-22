@@ -1,5 +1,6 @@
 param vaults_kv_name string
 param location string
+param tags object
 
 resource vaults_kv_resource 'Microsoft.KeyVault/vaults@2024-04-01-preview' = {
   name: vaults_kv_name

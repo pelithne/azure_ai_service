@@ -1,5 +1,7 @@
 targetScope = 'subscription'
 
+param tags object
+
 resource StorageAccounts 'Microsoft.Security/pricings@2023-01-01' = {
   name: 'StorageAccounts'
   properties: {

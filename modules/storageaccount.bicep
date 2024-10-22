@@ -1,5 +1,6 @@
 param storage_name string
 param location string
+param tags object
 
 resource storage_resource 'Microsoft.Storage/storageAccounts@2021-04-01' = {
   name: storage_name

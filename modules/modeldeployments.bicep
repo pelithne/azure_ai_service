@@ -5,6 +5,7 @@ param embeddingModelName string
 param embeddingModelVersion string
 param skuName string
 param skuCapacity int
+param tags object
 
 resource azureai 'Microsoft.CognitiveServices/accounts@2023-05-01' existing = {
   name: parentResource

@@ -53,6 +53,7 @@ module storageAccount 'modules/storageaccount.bicep' = {
   params: {
     storage_name: storage_name
     location: location
+    tags: tags
   }
 }
 
@@ -61,6 +62,7 @@ module keyVault 'modules/keyvault.bicep' = {
   params: {
     vaults_kv_name: vaults_kv_name
     location: location
+    tags: tags
   }
 }
 
@@ -105,6 +107,7 @@ module hubConnections 'modules/hubconnections.bicep' = {
     aiSearchName: search_service_resource_name
     aiServiceName: 'azureai'
     location: location
+    tags: tags
   }
   dependsOn: [workspaceHub]
 }
@@ -119,6 +122,7 @@ module modelDeployments 'modules/modeldeployments.bicep' = {
     embeddingModelVersion: '2'
     skuName: 'Standard'
     skuCapacity: 2
+    tags: tags
   }
   dependsOn: [aiServiceAccount]
 }
@@ -128,19 +132,16 @@ module modelDeployments 'modules/modeldeployments.bicep' = {
 module microsoftDefender 'modules/microsoft-defender.bicep' = {
   name: 'microsoftDefender'
   scope: subscription()
-  params: {}
+  params: {
+    tags: tags
+  }
 }
-
 
 // Include custom roles module
 module customRoles 'modules/customroles.bicep' = {
   name: 'customRoles'
   scope: subscription()
 }
-
-
-
-
 
 // Include policies module, with example deny VM Sku list
 module policies 'modules/policies.bicep' = {

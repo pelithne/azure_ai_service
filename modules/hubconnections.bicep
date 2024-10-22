@@ -5,6 +5,7 @@ param aiSearchResourceId string
 param aiServiceName string
 param aiSearchName string
 param location string
+param tags object
 
 resource workspacehub 'Microsoft.MachineLearningServices/workspaces@2024-07-01-preview' existing = {
   name: parentResourceId
