@@ -18,6 +18,11 @@ resource searchService 'Microsoft.Search/searchServices@2020-08-01' existing = {
   name: searchServiceName
 }
 
+// Reference the existing AI service
+resource aiService 'Microsoft.CognitiveServices/accounts@2021-04-30' existing = {
+  name: aiServiceName
+}
+
 // Role Assignment for AI Services to be Storage Blob Data Contributor
 resource storageBlobDataContributorAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(storageAccount.id, 'Storage Blob Data Contributor', aiServicesPrincipalId)
@@ -63,11 +68,29 @@ resource searchIndexDataReaderAssignment 'Microsoft.Authorization/roleAssignment
   }
 }
 
-// Role Assignment for AI Services to be Search Service Contributor on Search Service
+// Role Assignment for AI Services to be Search Service Contributor on itself
 resource searchServiceContributorAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(searchService.id, 'Search Service Contributor', aiServicesPrincipalId)
   properties: {
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7ca78c08-252a-4471-8644-bb5ff32d4ba0') // Search Service Contributor
     principalId: aiServicesPrincipalId
+  }
+}
+
+// Role Assignment for Search Service to be Search Index Data Reader on itself
+resource searchServiceIndexDataReaderAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(searchService.id, 'Search Index Data Reader', searchServicesPrincipalId)
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '1407120a-92aa-4202-b7e9-c0e197c71c8f') // Search Index Data Reader
+    principalId: searchServicesPrincipalId
+  }
+}
+
+// Role Assignment for Search Service to be Cognitive Services OpenAI Contributor on AI Service
+resource searchServiceOpenAIContributorAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(aiService.id, 'Cognitive Services OpenAI Contributor', searchServicesPrincipalId)
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'a001fd3d-188f-4b5d-821b-7da978bf7442') // Cognitive Services OpenAI Contributor
+    principalId: searchServicesPrincipalId
   }
 }
