@@ -15,20 +15,20 @@
 
 ## Project Member / Owner
  
-| Scope                                | Roles at scope              | 
-|--------------------------------------|-----------------------------|
-| RG                                   | Reader                      |
-| Project (where the user is a member) | Custom Project Member/Owner |
-| Azure AI Services                    | Custom Project Member/Owner |
-| Azure AI Search (Search Services)    | Custom Project Member/Owner |
-| Storage Account                      | Custom Project Member/Owner |
-| Azure Cosmos DB                      | Custom Project Member/Owner |
+| Scope                                | Roles at scope              | AD Groups? |
+|--------------------------------------|-----------------------------|------------|
+| RG                                   | Reader                      | |
+| Project (where the user is a member) | Custom Project Member/Owner | |
+| Azure AI Services                    | Custom Project Member/Owner | |
+| Azure AI Search (Search Services)    | Custom Project Member/Owner | |
+| Storage Account                      | Custom Project Member/Owner | |
+| Azure Cosmos DB                      | Custom Project Member/Owner | |
 
 ## Hub Owner
  
 | Scope | Roles at scope    |
 |-------|-------------------|
-| RG    | Custom Hub Owner  |
+| RG    | Custom Hub Owner  | 
  
  
 ## Platform Admin

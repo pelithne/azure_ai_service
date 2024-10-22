@@ -7,6 +7,7 @@ param searchServicesPrincipalId string
 param hubPrincipalId string
 param searchServiceName string
 param aiServiceName string
+param tags object
 
 // Reference the existing storage account
 resource storageAccount 'Microsoft.Storage/storageAccounts@2021-04-01' existing = {

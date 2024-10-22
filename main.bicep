@@ -2,8 +2,11 @@
 
 @description('The base name which should only contain lowercase characters (a to z).')
 param base_name string = 'abcdefghijklmnopqrstuvxyz'
-param tags object = {}
 param location string = resourceGroup().location
+
+// Automatically set base_name tag to the base name (for testing purposes)
+param tags object = {base_name: base_name}
+
 
 // Variables
 var vaults_kv_name = '${base_name}keyvault'
@@ -17,7 +20,7 @@ var app_insights_name = '${base_name}appinsights'
 var log_analytics_workspace_name = '${base_name}loganalytics'
 var discovery_url = 'https://${location}.api.azureml.ms/discovery'
 var defaultWorkspaceResourceGroup = '/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}'
-
+var policy_assignment_name = '${base_name}policyassignment'
 
 // Modules
 module logAnalyticsWorkspace 'modules/loganalyticsworkspace.bicep' = {
@@ -141,14 +144,17 @@ module microsoftDefender 'modules/microsoft-defender.bicep' = {
 module customRoles 'modules/customroles.bicep' = {
   name: 'customRoles'
   scope: subscription()
+  params: {
+    tags: tags
+  }
 }
 
 // Include policies module, with example deny VM Sku list
-module policies 'modules/policies.bicep' = {
+module policyDefinitions 'modules/customPolicies.bicep' = {
   name: 'policies'
   scope: subscription()
   params: {
-    location: location
+    tags: tags
     listOfDeniedVMSizes: [
       'Standard_D1_v2'
       'Standard_D2_v2'
@@ -161,7 +167,21 @@ module policies 'modules/policies.bicep' = {
   ]
 }
 
-
+// Call the policy assignments module
+module policyAssignments 'modules/policyAssignments.bicep' = {
+  name: 'policyAssignments'
+  scope: resourceGroup()
+  params: {
+    assignmentName: policy_assignment_name
+    allowedRegistryName: ''
+    restrictedModels: []
+    location: location
+    blockAzureOpenAIDeploymentsId: policyDefinitions.outputs.blockAzureOpenAIDeploymentsId
+    blockMachineLearningSKUId: policyDefinitions.outputs.blockMachineLearningSKUId
+    denyCommitmentPlanId: policyDefinitions.outputs.denyCommitmentPlanId
+    blockAIStudioHubCreationId: policyDefinitions.outputs.blockAIStudioHubCreationId
+  }
+}
 
 // call role assignments module, roleassignments.bicep 
 module roleAssignment 'modules/roleassignments.bicep' = {
@@ -173,6 +193,7 @@ module roleAssignment 'modules/roleassignments.bicep' = {
     hubPrincipalId: workspaceHub.outputs.principalId
     searchServiceName: searchService.name
     aiServiceName: aiServiceAccount.name
+    tags: tags
   }
   dependsOn: [
     workspaceHub, aiServiceAccount, searchService, hubConnections, modelDeployments
