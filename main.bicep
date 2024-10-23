@@ -124,7 +124,7 @@ module modelDeployments 'modules/modeldeployments.bicep' = {
     embeddingModelName: 'text-embedding-ada-002'
     embeddingModelVersion: '2'
     skuName: 'Standard'
-    skuCapacity: 2
+    skuCapacity: 1
     tags: tags
   }
   dependsOn: [aiServiceAccount]
