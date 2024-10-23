@@ -6,7 +6,7 @@ param location string = resourceGroup().location
 
 // Automatically set base_name tag to the base name (for testing purposes)
 param tags object = {base_name: base_name}
-
+param listOfDeniedVMSizes array = []
 
 // Variables
 var vaults_kv_name = '${base_name}keyvault'
@@ -155,12 +155,7 @@ module policyDefinitions 'modules/customPolicies.bicep' = {
   scope: subscription()
   params: {
     tags: tags
-    listOfDeniedVMSizes: [
-      'Standard_D1_v2'
-      'Standard_D2_v2'
-      'Standard_D3_v2'
-      'Standard_D4_v2'
-    ]
+    listOfDeniedVMSizes: listOfDeniedVMSizes
   }
   dependsOn: [
     workspaceHub, aiServiceAccount, searchService, hubConnections, modelDeployments

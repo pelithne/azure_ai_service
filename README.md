@@ -33,6 +33,8 @@ az deployment sub create --location <location> --template-file customPlatformAdm
 ````
 Or, you can use the content in ````customPlatformAdministrator.bicep```` as guidance when manually creating the role.
 
+## Allowed VM Sizes
+Parameters.json file ´containes a list of VMs that are not allowed. Currently the only allowed VMs are "Standard_D2ds_v4", "Standard_D4ds_v4", "Standard_D8ds_v4", "Standard_D16ds_v4".
 
 ## Common problems
 Sometimes the script will fail. There are a few common reason this can happen:

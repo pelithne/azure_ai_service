@@ -95,3 +95,11 @@ resource searchServiceOpenAIContributorAssignment 'Microsoft.Authorization/roleA
     principalId: searchServicesPrincipalId
   }
 }
+
+resource aiServicesOpenAIUserAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+  name: guid(aiService.id, 'Cognitive Services OpenAI User', aiServicesPrincipalId)
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd') // Cognitive Services OpenAI User
+    principalId: aiServicesPrincipalId                                                   
+  }
+}
