@@ -23,7 +23,7 @@ az group create --name azure-ai --location swedencentral
 
 Deploy the resources in the template, to the resource group created above. Use the ````-p base_name=<unique string>```` flag to make sure your deployment gets unique names on the resources (or your deployment may fail because of name clashes)
 ````
-az deployment group create  -g azure-ai --template-file main.bicep -p base_name=fghjdfghsd -p project=<project-name>
+az deployment group create  -g azure-ai --template-file main.bicep -p base_name=fghjdfghsd -p base_name=<text string> --parameters parameters.json
 ````
 
 ## Platform admin role
