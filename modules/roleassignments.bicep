@@ -69,7 +69,7 @@ resource searchIndexDataReaderAssignment 'Microsoft.Authorization/roleAssignment
   }
 }
 
-// Role Assignment for AI Services to be Search Service Contributor on itself
+// Role Assignment for AI Services to be Search Service Contributor
 resource searchServiceContributorAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(searchService.id, 'Search Service Contributor', aiServicesPrincipalId)
   properties: {
