@@ -80,7 +80,7 @@ resource searchServiceContributorAssignment 'Microsoft.Authorization/roleAssignm
 
 // Role Assignment for Search Service to be Search Index Data Reader on itself
 resource searchServiceIndexDataReaderAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(searchService.id, 'Search Index Data Reader', searchServicesPrincipalId)
+  name: guid(searchService.id, 'Search Index Data Reader', aiServicesPrincipalId)
   properties: {
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '1407120a-92aa-4202-b7e9-c0e197c71c8f') // Search Index Data Reader
     principalId: searchServicesPrincipalId
