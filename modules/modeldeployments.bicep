@@ -17,7 +17,7 @@ resource gpt_4o_model_deployment 'Microsoft.CognitiveServices/accounts/deploymen
   }
   sku: {
     name: 'GlobalStandard'
-    capacity: 400
+    capacity: 1
   }
 }
 
@@ -33,8 +33,9 @@ resource gpt_4o_mini_model_deployment 'Microsoft.CognitiveServices/accounts/depl
   }
   sku: {
     name: 'GlobalStandard'
-    capacity: 400
+    capacity: 1
   }
+  dependsOn: [gpt_4o_model_deployment]
 }
 
 resource embedding_model_deployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = {
@@ -49,6 +50,7 @@ resource embedding_model_deployment 'Microsoft.CognitiveServices/accounts/deploy
   }
   sku: {
     name: 'Standard'
-    capacity: 100
+    capacity: 1
   }
+  dependsOn: [gpt_4o_mini_model_deployment]
 }
