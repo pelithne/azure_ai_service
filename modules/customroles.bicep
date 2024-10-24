@@ -110,7 +110,6 @@ resource customHubOwner 'Microsoft.Authorization/roleDefinitions@2022-04-01' = {
           '*'
         ]
         notActions: [
-          'Microsoft.MachineLearningServices/workspaces/connections/listsecrets/action'
           'Microsoft.Authorization/roleAssignments/write'
           'Microsoft.Authorization/roleAssignments/delete'
           'Microsoft.MachineLearningServices/workspaces/hubs/write'
