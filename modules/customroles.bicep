@@ -29,6 +29,7 @@ resource customProjectMemberOwner 'Microsoft.Authorization/roleDefinitions@2022-
           'Microsoft.DocumentDb/databaseAccounts/*'
         ]
         notActions: [
+          'Microsoft.MachineLearningServices/workspaces/connections/listsecrets/action'
           'Microsoft.Search/searchServices/write'
           'Microsoft.Search/searchServices/delete'
           'Microsoft.Search/searchServices/listAdminKeys/action'
@@ -109,6 +110,7 @@ resource customHubOwner 'Microsoft.Authorization/roleDefinitions@2022-04-01' = {
           '*'
         ]
         notActions: [
+          'Microsoft.MachineLearningServices/workspaces/connections/listsecrets/action'
           'Microsoft.Authorization/roleAssignments/write'
           'Microsoft.Authorization/roleAssignments/delete'
           'Microsoft.MachineLearningServices/workspaces/hubs/write'
