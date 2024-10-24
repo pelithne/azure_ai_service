@@ -2,10 +2,15 @@
 
 @description('The base name which should only contain lowercase characters (a to z).')
 param base_name string = 'abcdefghijklmnopqrstuvxyz'
+
+@description('The location where the resources will be deployed.')
 param location string = resourceGroup().location
 
 // Automatically set base_name tag to the base name (for testing purposes)
+@description('Tags to be applied to the resources.')
 param tags object = {base_name: base_name}
+
+@description('List of VM sizes that are denied for deployment.')
 param listOfDeniedVMSizes array = []
 
 // Variables
@@ -23,6 +28,8 @@ var defaultWorkspaceResourceGroup = '/subscriptions/${subscription().subscriptio
 var policy_assignment_name = '${base_name}policyassignment'
 
 // Modules
+
+// Deploys a Log Analytics workspace with the specified name and tags
 module logAnalyticsWorkspace 'modules/loganalyticsworkspace.bicep' = {
   name: 'logAnalyticsWorkspace'
   params: {
@@ -32,6 +39,7 @@ module logAnalyticsWorkspace 'modules/loganalyticsworkspace.bicep' = {
   }
 }
 
+// Deploys an Application Insights instance with the specified name and tags
 module appInsights 'modules/appinsights.bicep' = {
   name: 'appInsights'
   params: {
@@ -42,6 +50,7 @@ module appInsights 'modules/appinsights.bicep' = {
   }
 }
 
+// Deploys a Cosmos DB account with the specified name and tags
 module cosmosdbAccount 'modules/cosmosdbaccount.bicep' = {
   name: 'cosmosdbAccount'
   params: {
@@ -51,6 +60,7 @@ module cosmosdbAccount 'modules/cosmosdbaccount.bicep' = {
   }
 }
 
+// Deploys a Storage Account with the specified name and tags
 module storageAccount 'modules/storageaccount.bicep' = {
   name: 'storageAccountModule'
   params: {
@@ -60,6 +70,7 @@ module storageAccount 'modules/storageaccount.bicep' = {
   }
 }
 
+// Deploys a Key Vault with the specified name and tags
 module keyVault 'modules/keyvault.bicep' = {
   name: 'keyVaultModule'
   params: {
@@ -69,6 +80,7 @@ module keyVault 'modules/keyvault.bicep' = {
   }
 }
 
+// Deploys a Workspace Hub with the specified name and tags
 module workspaceHub 'modules/workspacehub.bicep' = {
   name: 'workspaceHub'
   params: {
@@ -82,6 +94,7 @@ module workspaceHub 'modules/workspacehub.bicep' = {
   }
 }
 
+// Deploys an Azure AI service account with the specified name and tags
 module aiServiceAccount 'modules/aiserviceaccount.bicep' = {
   name: 'aiServiceAccount'
   params: {
@@ -91,6 +104,7 @@ module aiServiceAccount 'modules/aiserviceaccount.bicep' = {
   }
 }
 
+// Deploys an Azure Cognitive Search service with the specified name and tags
 module searchService 'modules/searchservice.bicep' = {
   name: 'searchService'
   params: {
@@ -100,6 +114,7 @@ module searchService 'modules/searchservice.bicep' = {
   }
 }
 
+// Creates connections between the Workspace Hub and other services
 module hubConnections 'modules/hubconnections.bicep' = {
   name: 'hubConnectiondocintelligence'
   params: {
@@ -115,6 +130,7 @@ module hubConnections 'modules/hubconnections.bicep' = {
   dependsOn: [workspaceHub]
 }
 
+// Deploys model deployments for the AI service
 module modelDeployments 'modules/modeldeployments.bicep' = {
   name: 'modelDeployments'
   params: {
@@ -124,8 +140,7 @@ module modelDeployments 'modules/modeldeployments.bicep' = {
   dependsOn: [aiServiceAccount]
 }
 
-
-// Microsoft Defender module for all resources (on subscription level)
+// Enables Microsoft Defender for all resources at the subscription level
 module microsoftDefender 'modules/microsoft-defender.bicep' = {
   name: 'microsoftDefender'
   scope: subscription()
@@ -134,7 +149,7 @@ module microsoftDefender 'modules/microsoft-defender.bicep' = {
   }
 }
 
-// Include custom roles module
+// Creates custom roles at the subscription level
 module customRoles 'modules/customroles.bicep' = {
   name: 'customRoles'
   scope: subscription()
@@ -143,7 +158,7 @@ module customRoles 'modules/customroles.bicep' = {
   }
 }
 
-// Include policies module, with example deny VM Sku list
+// Defines custom policies at the subscription level, including a deny list for VM sizes
 module policyDefinitions 'modules/customPolicies.bicep' = {
   name: 'policies'
   scope: subscription()
@@ -156,7 +171,7 @@ module policyDefinitions 'modules/customPolicies.bicep' = {
   ]
 }
 
-// Call the policy assignments module
+// Assigns the defined policies to the resource group
 module policyAssignments 'modules/policyAssignments.bicep' = {
   name: 'policyAssignments'
   scope: resourceGroup()
@@ -172,7 +187,7 @@ module policyAssignments 'modules/policyAssignments.bicep' = {
   }
 }
 
-// call role assignments module, roleassignments.bicep 
+// Assigns roles to various services and resources
 module roleAssignment 'modules/roleassignments.bicep' = {
   name: 'roleAssignment'
   params: {
