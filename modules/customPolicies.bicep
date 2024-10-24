@@ -7,7 +7,7 @@ param tags object
 
 
 // Block Azure OpenAI Deployments
-resource blockAzureOpenAIDeployments 'Microsoft.Authorization/policyDefinitions@2021-06-01' = {
+resource blockAzureOpenAIDeployments 'Microsoft.Authorization/policyDefinitions@2023-04-01' = {
   name: 'blockAzureOpenAIDeployments pelithne'
   properties: {
     displayName: 'Block Azure OpenAI Deployments'
@@ -29,7 +29,7 @@ resource blockAzureOpenAIDeployments 'Microsoft.Authorization/policyDefinitions@
 
 
 // Block Machine Learning SKU
-resource blockMachineLearningSKU 'Microsoft.Authorization/policyDefinitions@2021-06-01' = {
+resource blockMachineLearningSKU 'Microsoft.Authorization/policyDefinitions@2023-04-01' = {
   name: 'blockMachineLearningSKU pelithne'
   properties: {
     displayName: 'Block Machine Learning SKU'
@@ -57,7 +57,7 @@ resource blockMachineLearningSKU 'Microsoft.Authorization/policyDefinitions@2021
 
 
 // Deny commitmentplan
-resource denyCommitmentPlan 'Microsoft.Authorization/policyDefinitions@2021-06-01' = {
+resource denyCommitmentPlan 'Microsoft.Authorization/policyDefinitions@2023-04-01' = {
   name: 'denyCommitmentPlan pelithne'
   properties: {
     displayName: 'Deny commitmentplan'
@@ -78,7 +78,7 @@ resource denyCommitmentPlan 'Microsoft.Authorization/policyDefinitions@2021-06-0
 
 
 // Block AI Studio Hub Creation
-resource blockAIStudioHubCreation 'Microsoft.Authorization/policyDefinitions@2021-06-01' = {
+resource blockAIStudioHubCreation 'Microsoft.Authorization/policyDefinitions@2023-04-01' = {
   name: 'blockAIStudioHubCreation pelithne'
   properties: {
     displayName: 'Block AI Studio Hub Creation'

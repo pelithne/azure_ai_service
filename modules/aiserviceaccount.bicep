@@ -2,7 +2,7 @@ param name string
 param location string
 param tags object
 
-resource ai_service_account 'Microsoft.CognitiveServices/accounts@2021-04-30' = {
+resource ai_service_account 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
   name: name
   location: location
   sku: {

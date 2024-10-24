@@ -2,7 +2,7 @@ param vaults_kv_name string
 param location string
 param tags object
 
-resource vaults_kv_resource 'Microsoft.KeyVault/vaults@2024-04-01-preview' = {
+resource vaults_kv_resource 'Microsoft.KeyVault/vaults@2023-07-01' = {
   name: vaults_kv_name
   location: location
   properties: {

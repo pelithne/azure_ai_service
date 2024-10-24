@@ -2,7 +2,7 @@ param name string
 param location string
 param tags object
 
-resource log_analytics_workspace 'Microsoft.OperationalInsights/workspaces@2021-06-01' = {
+resource log_analytics_workspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
   name: name
   location: location
   properties: {

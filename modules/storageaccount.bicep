@@ -2,7 +2,7 @@ param storage_name string
 param location string
 param tags object
 
-resource storage_resource 'Microsoft.Storage/storageAccounts@2021-04-01' = {
+resource storage_resource 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   name: storage_name
   location: location
   sku: {

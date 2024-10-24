@@ -2,7 +2,7 @@ param name string
 param location string
 param tags object
 
-resource cosmosdb_account 'Microsoft.DocumentDB/databaseAccounts@2021-04-15' = {
+resource cosmosdb_account 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
   name: name
   location: location
   properties: {

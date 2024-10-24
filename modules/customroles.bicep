@@ -96,9 +96,9 @@ resource customProjectMemberOwner 'Microsoft.Authorization/roleDefinitions@2022-
 
 // Custom Hub Owner Role
 resource customHubOwner 'Microsoft.Authorization/roleDefinitions@2022-04-01' = {
-  name: guid(subscription().id, 'Custom Hub Owner ${tags.base_name}')
+  name: guid(subscription().id, 'Hub Owner ${tags.base_name}')
   properties: {
-    roleName: 'Custom Hub Owner ${tags.base_name}'
+    roleName: 'Hub Owner ${tags.base_name}'
     description: 'Custom role-based access control for Hub Owners in AI Studio'
     assignableScopes: [
       subscription().id
