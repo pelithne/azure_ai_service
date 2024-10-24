@@ -7,6 +7,7 @@ param location string = resourceGroup().location
 // Automatically set base_name tag to the base name (for testing purposes)
 param tags object = {base_name: base_name}
 param listOfDeniedVMSizes array = []
+param model_sku_capacity int = 400
 
 // Variables
 var vaults_kv_name = '${base_name}keyvault'
@@ -124,7 +125,7 @@ module modelDeployments 'modules/modeldeployments.bicep' = {
     embeddingModelName: 'text-embedding-ada-002'
     embeddingModelVersion: '2'
     skuName: 'Standard'
-    skuCapacity: 1
+    skuCapacity: model_sku_capacity
     tags: tags
   }
   dependsOn: [aiServiceAccount]

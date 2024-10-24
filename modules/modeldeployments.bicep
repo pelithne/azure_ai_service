@@ -1,49 +1,54 @@
 param parentResource string
-param openAiModelName string
-param openAiModelVersion string
-param embeddingModelName string
-param embeddingModelVersion string
-param skuName string
-param skuCapacity int
 param tags object
 
 resource azureai 'Microsoft.CognitiveServices/accounts@2023-05-01' existing = {
   name: parentResource
 }
 
-resource openai_model_deployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = {
+resource gpt_4o_model_deployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = {
   parent: azureai
-  name: openAiModelName
+  name: 'gpt-4o-global'
   properties: {
-    dynamicThrottlingEnabled: true
     model: {
       format: 'OpenAI'
-      name: openAiModelName
-      version: openAiModelVersion
+      name: 'gpt-4o'
+      version: '2024-08-06'
     }
   }
   sku: {
-    name: skuName
-    capacity: skuCapacity
+    name: 'GlobalStandard'
+    capacity: 400
+  }
+}
+
+resource gpt_4o_mini_model_deployment 'Microsoft.CognitiveServices/accounts/deployments@2024-06-01-preview' = {
+  parent: azureai
+  name: 'gpt-4o-mini-global'
+  properties: {
+    model: {
+      format: 'OpenAI'
+      name: 'gpt-4o-mini'
+      version: '2024-07-18'
+    }
+  }
+  sku: {
+    name: 'GlobalStandard'
+    capacity: 400
   }
 }
 
 resource embedding_model_deployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = {
   parent: azureai
-  name: embeddingModelName
+  name: 'text-embedding-ada-002'
   properties: {
     model: {
       format: 'OpenAI'
-      name: embeddingModelName
-      version: embeddingModelVersion
+      name: 'text-embedding-ada-002'
+      version: '2'
     }
   }
   sku: {
-    name: skuName
-    capacity: skuCapacity
+    name: 'Standard'
+    capacity: 100
   }
-  dependsOn: [openai_model_deployment]
 }
-
-output openaiModelDeploymentId string = openai_model_deployment.id
-output embeddingModelDeploymentId string = embedding_model_deployment.id
