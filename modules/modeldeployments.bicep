@@ -7,7 +7,7 @@ resource azureai 'Microsoft.CognitiveServices/accounts@2023-05-01' existing = {
 
 resource gpt_4o_model_deployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = {
   parent: azureai
-  name: 'gpt-4o-global'
+  name: 'gpt-4o'
   properties: {
     model: {
       format: 'OpenAI'
@@ -16,14 +16,14 @@ resource gpt_4o_model_deployment 'Microsoft.CognitiveServices/accounts/deploymen
     }
   }
   sku: {
-    name: 'GlobalStandard'
-    capacity: 1
+    name: 'Standard'
+    capacity: 500
   }
 }
 
 resource gpt_4o_mini_model_deployment 'Microsoft.CognitiveServices/accounts/deployments@2024-06-01-preview' = {
   parent: azureai
-  name: 'gpt-4o-mini-global'
+  name: 'gpt-4o-mini'
   properties: {
     model: {
       format: 'OpenAI'
@@ -32,8 +32,8 @@ resource gpt_4o_mini_model_deployment 'Microsoft.CognitiveServices/accounts/depl
     }
   }
   sku: {
-    name: 'GlobalStandard'
-    capacity: 1
+    name: 'Standard'
+    capacity: 500
   }
   dependsOn: [gpt_4o_model_deployment]
 }
@@ -50,7 +50,7 @@ resource embedding_model_deployment 'Microsoft.CognitiveServices/accounts/deploy
   }
   sku: {
     name: 'Standard'
-    capacity: 1
+    capacity: 500
   }
   dependsOn: [gpt_4o_mini_model_deployment]
 }
