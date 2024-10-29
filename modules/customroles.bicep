@@ -29,7 +29,6 @@ resource customProjectMemberOwner 'Microsoft.Authorization/roleDefinitions@2022-
           'Microsoft.DocumentDb/databaseAccounts/*'
         ]
         notActions: [
-          'Microsoft.MachineLearningServices/workspaces/connections/listsecrets/action'
           'Microsoft.Search/searchServices/write'
           'Microsoft.Search/searchServices/delete'
           'Microsoft.Search/searchServices/listAdminKeys/action'
